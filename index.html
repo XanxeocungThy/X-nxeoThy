@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head><title>Chuyển Link Shopee Affiliate</title></head>
+<head><title>XĂN XEO CUNG THY </title></head>
 <body>
-<h3>ĐỖI LINK SHOPEE APP MÃ 25%</h3>
+<h3>XĂN XEO CHÁY TÚI </h3>
 <p style="font-size: 14px; color: #666;">Dán link Shopee:</p>
 <input type="text" id="inputLink" placeholder="https://shopee.vn/product-link" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
 <button onclick="convertLink()" style="width: 100%; background: #ee4d2d; color: white; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">CHUYỂN ĐỔI NGAY</button>
-<div id="output" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border: 1px solid #ee4d2d; border-radius: 4px; word-break: break-all; font-family: monospace; font-size: 14px; display: none;"></div>
-<p style="font-size: 12px; color: #999; text-align: center;">© 2026 SHOPEE - HỖ TRỢ AFF</p>
+<div id="output" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border: 1px solid #ee4d2d; border-radius: 4px; word-break: break-all; font-family: monospace; font-size: 14px; display: none;">
+  <div id="affLink"></div>
+  <button onclick="copyLink()" id="copyBtn" style="margin-top: 10px; background: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">📋 Sao chép link</button>
+</div>
+<p style="font-size: 12px; color: #999; text-align: center;">© 2026 SHOPEE - HỖ TRỢ AFF | ID: 17314740041</p>
 
 <script>
+let currentAffLink = '';
+
 function convertLink() {
   const input = document.getElementById('inputLink').value.trim();
   if (!input) {
@@ -18,11 +23,19 @@ function convertLink() {
   }
   const encoded = encodeURIComponent(input);
   const affId = '17314740041';
-  const affLink = `https://s.shopee.vn/an_redir?origin_link=${encoded}&affiliate_id=${affId}`;
-  const output = document.getElementById('output');
-  output.innerHTML = `Link Affiliate:<br><strong>${affLink}</strong><br><br>Sao chép và dùng ngay!`;
-  output.style.display = 'block';
-  output.scrollIntoView({behavior: 'smooth'});
+  currentAffLink = `https://s.shopee.vn/an_redir?origin_link=${encoded}&affiliate_id=${affId}`;
+  document.getElementById('affLink').innerHTML = `Link chuyển đổi:<br><strong>${currentAffLink}</strong>`;
+  document.getElementById('output').style.display = 'block';
+  document.getElementById('output').scrollIntoView({behavior: 'smooth'});
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(currentAffLink).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Đã copy!';
+    setTimeout(() => { btn.innerHTML = original; }, 2000);
+  }).catch(() => alert('Copy thủ công: Chọn & Ctrl+C'));
 }
 </script>
 
