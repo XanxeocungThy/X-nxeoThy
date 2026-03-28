@@ -3,26 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuyển Đổi Link Shopee </title>
+    <title>Chuyển Đổi Link Shopee - FB Tracking ID 17314740041</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
         input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-        button { background: #ee4d2d; color: white; padding: 12px 24px; border: none; cursor: pointer; font-size: 16px; }
-        button:hover { background: #d9361f; }
+        button { padding: 12px 24px; border: none; cursor: pointer; font-size: 16px; margin: 5px; border-radius: 5px; }
+        #convertBtn { background: #ee4d2d; color: white; }
+        #convertBtn:hover { background: #d9361f; }
+        #copyBtn { background: #28a745; color: white; }
+        #copyBtn:hover { background: #218838; }
+        #copyBtn.success { background: #17a2b8; }
         #result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; word-break: break-all; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <h1>Chuyển Đổi Link Shopee </h1>
-    <p>Dán link Shopee vào ô dưới, nhấn "Chuyển Đổi" để nhận mã. </p>
+    <h1>Chuyển Đổi Link Shopee với Tracking ID: 17314740041</h1>
+    <p>Dán link từ Shopee vào ô dưới, nhấn "Chuyển Đổi" để lấy mã </p>
     
-    <input type="url" id="inputLink" placeholder="Dán link Shopee gốc (ví dụ: https://shopee.vn/... hoặc link FB)" required>
+    <input type="url" id="inputLink" placeholder="Dán link Shopee gốc (ví dụ: https://shopee.vn/...)" required>
     <br>
-    <button onclick="convertLink()">Chuyển Đổi & Mở Link</button>
+    <button id="convertBtn" onclick="convertLink()">Chuyển Đổi</button>
+    <button id="copyBtn" class="hidden" onclick="copyLink()">Sao chép</button>
     
-    <div id="result"></div>
+    <div id="result" class="hidden"></div>
 
     <script>
+        let convertedUrl = '';
+
+        async function copyLink() {
+            if (!convertedUrl) return;
+            try {
+                await navigator.clipboard.writeText(convertedUrl);
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.textContent = 'Đã sao chép!';
+                copyBtn.classList.add('success');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Sao chép';
+                    copyBtn.classList.remove('success');
+                }, 2000);
+            } catch (err) {
+                alert('Không thể sao chép: ' + err);
+            }
+        }
+
         function convertLink() {
             const input = document.getElementById('inputLink').value.trim();
             if (!input) {
@@ -30,29 +54,24 @@
                 return;
             }
 
-            // ID tracking cố định
             const trackingId = '17314740041';
-            
-            // Thêm tham số sp_atk nếu chưa có (tracking affiliate Shopee)
             let newUrl = input;
-            const url = new URL(input, 'https://shopee.vn');  // Force base nếu không có
+            const url = new URL(input, 'https://shopee.vn');
             if (!url.searchParams.has('sp_atk')) {
                 url.searchParams.set('sp_atk', trackingId);
             }
-            newUrl = url.toString();
+            convertedUrl = newUrl = url.toString();
 
-            // Hiển thị kết quả
             const result = document.getElementById('result');
             result.innerHTML = `
                 <strong>Link đã chuyển đổi:</strong><br>
                 ${newUrl}<br><br>
-                <small>Đã thêm sp_atk=${trackingId} để tracking từ FB. Nhấn F5 để thử lại.</small>
+                <small>Đã thêm sp_atk=${trackingId}. Sẵn sàng tracking từ FB.</small>
             `;
+            result.classList.remove('hidden');
 
-            // Tự động mở link mới (conversion sang Shopee)
-            if (confirm('Mở link Shopee đã tracking?')) {
-                window.open(newUrl, '_blank');
-            }
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.classList.remove('hidden');
         }
     </script>
 </body>
