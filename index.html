@@ -1,47 +1,59 @@
 <!DOCTYPE html>
-<html>
-<head><title>XĂN XEO CUNG THY </title></head>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển Đổi Link Shopee </title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { background: #ee4d2d; color: white; padding: 12px 24px; border: none; cursor: pointer; font-size: 16px; }
+        button:hover { background: #d9361f; }
+        #result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; word-break: break-all; }
+    </style>
+</head>
 <body>
-<h3>XĂN XEO CHÁY TÚI </h3>
-<p style="font-size: 14px; color: #666;">Dán link Shopee:</p>
-<input type="text" id="inputLink" placeholder="https://shopee.vn/product-link" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
-<button onclick="convertLink()" style="width: 100%; background: #ee4d2d; color: white; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">CHUYỂN ĐỔI NGAY</button>
-<div id="output" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border: 1px solid #ee4d2d; border-radius: 4px; word-break: break-all; font-family: monospace; font-size: 14px; display: none;">
-  <div id="affLink"></div>
-  <button onclick="copyLink()" id="copyBtn" style="margin-top: 10px; background: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">📋 Sao chép link</button>
-</div>
-<p style="font-size: 12px; color: #999; text-align: center;">© 2026 SHOPEE - HỖ TRỢ AFF | ID: 17314740041</p>
+    <h1>Chuyển Đổi Link Shopee </h1>
+    <p>Dán link từ Facebook hoặc Shopee vào ô dưới, nhấn "Chuyển Đổi" để thêm ID tracking. Link mới sẽ mở Shopee và ghi nhận conversion/mã giảm giá.[web:9]</p>
+    
+    <input type="url" id="inputLink" placeholder="Dán link FB/Shopee gốc (ví dụ: https://shopee.vn/... hoặc link FB)" required>
+    <br>
+    <button onclick="convertLink()">Chuyển Đổi & Mở Link</button>
+    
+    <div id="result"></div>
 
-<script>
-let currentAffLink = '';
+    <script>
+        function convertLink() {
+            const input = document.getElementById('inputLink').value.trim();
+            if (!input) {
+                alert('Vui lòng dán link!');
+                return;
+            }
 
-function convertLink() {
-  const input = document.getElementById('inputLink').value.trim();
-  if (!input) {
-    alert('Vui lòng dán link Shopee!');
-    return;
-  }
-  const encoded = encodeURIComponent(input);
-  const affId = '17314740041';
-  currentAffLink = `https://s.shopee.vn/an_redir?origin_link=${encoded}&affiliate_id=${affId}`;
-  document.getElementById('affLink').innerHTML = `Link chuyển đổi:<br><strong>${currentAffLink}</strong>`;
-  document.getElementById('output').style.display = 'block';
-  document.getElementById('output').scrollIntoView({behavior: 'smooth'});
-}
+            // ID tracking cố định
+            const trackingId = '17314740041';
+            
+            // Thêm tham số sp_atk nếu chưa có (tracking affiliate Shopee)
+            let newUrl = input;
+            const url = new URL(input, 'https://shopee.vn');  // Force base nếu không có
+            if (!url.searchParams.has('sp_atk')) {
+                url.searchParams.set('sp_atk', trackingId);
+            }
+            newUrl = url.toString();
 
-function copyLink() {
-  navigator.clipboard.writeText(currentAffLink).then(() => {
-    const btn = document.getElementById('copyBtn');
-    const original = btn.innerHTML;
-    btn.innerHTML = '✅ Đã copy!';
-    setTimeout(() => { btn.innerHTML = original; }, 2000);
-  }).catch(() => alert('Copy thủ công: Chọn & Ctrl+C'));
-}
-</script>
+            // Hiển thị kết quả
+            const result = document.getElementById('result');
+            result.innerHTML = `
+                <strong>Link đã chuyển đổi:</strong><br>
+                ${newUrl}<br><br>
+                <small>Đã thêm sp_atk=${trackingId} để tracking từ FB. Nhấn F5 để thử lại.</small>
+            `;
 
-<style>
-body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 380px; margin: 20px auto; padding: 20px; background: #fafafa; }
-h3 { color: #ee4d2d; text-align: center; margin: 0 0 10px 0; font-size: 18px; }
-</style>
+            // Tự động mở link mới (conversion sang Shopee)
+            if (confirm('Mở link Shopee đã tracking?')) {
+                window.open(newUrl, '_blank');
+            }
+        }
+    </script>
 </body>
 </html>
